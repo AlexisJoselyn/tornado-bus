@@ -4,10 +4,10 @@ import { Destination } from '../../types';
 
 const useSearchDestinations = () => {
   const [destinations, setDestinations] = useState<Destination[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [loadingDestination, setLoading] = useState(false);
+  const [errorDestination, setError] = useState<string | null>(null);
 
-  const search = useCallback(async (cityInitId: number, value: string) => {
+  const searchDestination = useCallback(async (cityInitId: number, value: string) => {
     if (value.length < 3) return;
 
     setLoading(true);
@@ -23,7 +23,7 @@ const useSearchDestinations = () => {
     }
   }, []);
 
-  return { destinations, loading, error, search };
+  return { destinations, loadingDestination, errorDestination, searchDestination };
 };
 
 export {useSearchDestinations};

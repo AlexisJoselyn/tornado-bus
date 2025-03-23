@@ -3,7 +3,7 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useTripStore } from '../../store';
 import { useEffect, useState } from 'react';
-import { useSearchCities } from '../../api';
+import { useSearchCities, useSearchDestinations } from '../../api';
 
 interface TripSearchData {
   origin: string;
@@ -42,8 +42,13 @@ export const TripForm = () => {
   // const tripType = watch('tripType');
 
   const origin = watch('origin');
+  const [selectedOriginId, setSelectedOriginId] = useState<number | null>(null);
   const { cities, loading, error, search } = useSearchCities();
   const [showOriginDropdown, setShowOriginDropdown] = useState(false);
+
+  const destination = watch('destination');
+  const { destinations, loadingDestination, errorDestination, searchDestination } = useSearchDestinations();
+  const [showDestinationDropdown, setShowDestinationDropdown] = useState(false);
 
   useEffect(() => {
     if (origin && origin.length >= 3) {
@@ -54,13 +59,28 @@ export const TripForm = () => {
     }
   }, [origin, search]);
 
+  useEffect(() => {
+    if (destination && destination.length >= 3 && selectedOriginId) {
+      searchDestination(selectedOriginId, destination);
+      setShowDestinationDropdown(true);
+    } else {
+      setShowDestinationDropdown(false);
+    }
+  }, [destination, searchDestination, selectedOriginId]);
+
   const onSubmit = (data: TripSearchData) => {
     setTripSearch(data);
   };
 
-  const handleCitySelection = (cityName: string) => {
+  const handleCitySelection = (cityName: string, cityId: number) => {
     setShowOriginDropdown(false);
     setValue('origin', cityName);
+    setSelectedOriginId(cityId);
+  };
+
+  const handleDestinationSelection = (destinationName: string) => {
+    setShowDestinationDropdown(false);
+    setValue('destination', destinationName);
   };
 
   return (
@@ -89,15 +109,19 @@ export const TripForm = () => {
         {/* Lista desplegable de ciudades */}
         {showOriginDropdown && (
           <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1">
-            {cities.map((city) => (
-              <div
-                key={city.id}
-                className="p-2 hover:bg-gray-100 cursor-pointer"
-                onClick={() => handleCitySelection(city.name)}
-              >
-                {city.name}
-              </div>
-            ))}
+            {cities.length > 0 ? (
+              cities.map((city) => (
+                <div
+                  key={city.id}
+                  className="p-2 hover:bg-gray-100 cursor-pointer"
+                  onClick={() => handleCitySelection(city.name, city.id)}
+                >
+                  {city.name}
+                </div>
+              ))
+            ) : (
+              <div className="p-2 text-gray-500">No se encontraron coincidencias.</div>
+            )}
           </div>
         )}
 
@@ -105,10 +129,36 @@ export const TripForm = () => {
         {error && <p className="text-sm text-red-500">{error}</p>}
       </div>
 
-      <div>
+      <div className="relative">
         <label className="block font-semibold">Destino:</label>
-        <input {...register('destination')} className="border p-2 w-full rounded-md" />
+        <input
+          {...register('destination')}
+          className="border p-2 w-full rounded-md"
+          placeholder="Busca una ciudad de destino"
+        />
         {errors.destination && <p className="text-red-500 text-sm">{errors.destination.message}</p>}
+
+        {/* Lista desplegable de ciudades */}
+        {showDestinationDropdown && (
+          <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1">
+            {destinations.length > 0 ? (
+              destinations.map((destination) => (
+                <div
+                  key={destination.id}
+                  className="p-2 hover:bg-gray-100 cursor-pointer"
+                  onClick={() => handleDestinationSelection(destination.name)}
+                >
+                  {destination.name}
+                </div>
+              ))
+            ) : (
+              <div className="p-2 text-gray-500">No se encontraron coincidencias.</div>
+            )}
+          </div>
+        )}
+
+        {loadingDestination && <p className="text-sm text-gray-500">Buscando ciudades...</p>}
+        {errorDestination && <p className="text-sm text-red-500">{error}</p>}
       </div>
       
       {/*
