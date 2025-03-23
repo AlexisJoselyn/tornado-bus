@@ -211,6 +211,17 @@ export const TripForm = () => {
         )}
       </div>
 
+      <div>
+        <label className="block font-semibold">Fecha de Viaje:</label>
+        <input
+          type="date"
+          {...register('date')}
+          className="border p-2 w-full rounded-md"
+          min={today.toISOString().split('T')[0]}
+        />
+        {errors.date && <p className="text-red-500 text-sm">{errors.date.message}</p>}
+      </div>
+
       <button
         type="submit"
         className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-700 transition"
