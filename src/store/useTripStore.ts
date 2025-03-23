@@ -1,10 +1,10 @@
 import { create } from 'zustand';
 
-interface TripState {
+export interface TripState {
   origin: string;
   destination: string;
   date: string | Date;
-  passengers: number;
+  passenger: string;
   trips: string[]
   setTripData: (data: Partial<TripState>) => void;
 }
@@ -13,7 +13,7 @@ export const useTripStore = create<TripState>((set) => ({
   origin: '',
   destination: '',
   date: '',
-  passengers: 1,
-  trips: [''],
+  passenger: '',
+  trips: [],
   setTripData: (data) => set((state) => ({ ...state, ...data })),
 }));
