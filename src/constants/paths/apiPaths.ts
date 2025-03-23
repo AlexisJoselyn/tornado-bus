@@ -5,4 +5,5 @@ export const API_PATHS = {
   SEARCH_ORIGIN: `${BASE_URL}/select/origin`,
   SEARCH_DESTINY: (cityInitId: number) => `${BASE_URL}/select/destiny/${cityInitId}`,
   PASSENGER_TYPES: `${BASE_URL_API}/select/type`,
+  DEPARTURE_TRAVELS: `${BASE_URL}/list/departure-travels`,
 };
