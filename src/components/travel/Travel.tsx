@@ -3,6 +3,7 @@ import { DepartureTravel, useDepartureTravels } from '../../api';
 import { useTripStore } from '../../store';
 import { TripForm } from '../form';
 import { formatDateToYYYYMMDD } from '../../lib';
+import { TravelCard } from '../travelCard';
 
 export const Travel = () => {
   const [departureTravels, setDepartureTravels] = useState<DepartureTravel[]>([]);
@@ -51,13 +52,15 @@ export const Travel = () => {
     }
   }, [travels]);
 
+  console.log('departureTravels', departureTravels);
+
   return (
     <div>
       <TripForm onSubmit={handleFormSubmit} />
       {loadingTravels && <p>Cargando...</p>}
       {errorTravels && <p>Error: {errorTravels}</p>}
       {departureTravels.map((travel, index) => (
-        <div key={index}>{travel.cityEnd}</div>
+        <TravelCard key={index} travel={travel} />
       ))}
     </div>
   );

@@ -9,9 +9,11 @@ export interface DepartureTravel {
     cityInit: string;
     cityEndID: number;
     cityEnd: string;
+    addressEnd: string;
     addressInit: string;
     totalSeats: number;
     totalNivel: number;
+    routesNames: string;
     amount: string;
     companyName: string;
     companyLogo: string;
