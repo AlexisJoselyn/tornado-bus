@@ -5,6 +5,7 @@ interface TripStore {
   destination: string;
   passenger: string;
   totalPassengers: number;
+  passengerType: object;
   date: Date;
   returnDate?: Date;
   originId: number | null;
@@ -14,6 +15,7 @@ interface TripStore {
     destination: string;
     passenger: string;
     totalPassengers: number;
+    passengerType: object;
     date: Date;
     returnDate?: Date;
     originId: number | null;
@@ -27,6 +29,7 @@ export const useTripStore = create<TripStore>((set) => ({
   destination: '',
   passenger: '',
   totalPassengers: 0,
+  passengerType: {},
   date: new Date(),
   returnDate: undefined,
   originId: null,

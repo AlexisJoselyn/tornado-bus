@@ -1,3 +1,14 @@
+export interface citiesDepartureTravel {
+  originID: number;
+  destinyID: number;
+}
+
+export interface metadataDepartureTravel {
+  isMulti: boolean;
+  connections: number;
+  cities: citiesDepartureTravel[];
+}
+
 export interface DepartureTravel {
     id: number;
     dateInitFormat: string;
@@ -19,6 +30,7 @@ export interface DepartureTravel {
     companyLogo: string;
     currencyID: number;
     currency: string;
+    metadata: metadataDepartureTravel;
   }
 
 export interface DepartureTravelsResponse {
