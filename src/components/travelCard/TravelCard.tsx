@@ -1,12 +1,25 @@
 import { DepartureTravel } from '../../api';
 import arrow from '../../assets/arrow.png';
 import { MapPin } from 'lucide-react';
+import { useNavigate } from 'react-router';
+import { useSeatStore } from '../../store';
 
 interface TravelCardProps {
     travel: DepartureTravel;
 }
 
 export const TravelCard = ({ travel }: TravelCardProps) => {
+  const navigate = useNavigate();
+  const setTravelData = useSeatStore((state) => state.setTravelData);
+
+  const handleSelect = () => {
+    const idCity = travel.metadata.cities[0].originID;
+    const idDestination = travel.metadata.cities[0].destinyID;
+    setTravelData(travel.id, idCity, idDestination);
+    navigate('/seat-selection');
+  };
+
+
   return (
     <div className="border rounded-lg p-4 mb-4 shadow-sm bg-white">
       <div className="flex justify-between items-center mb-4">
@@ -49,7 +62,9 @@ export const TravelCard = ({ travel }: TravelCardProps) => {
           <p className="text-2xl font-semibold text-[color:var(--primary-blue)]">${travel.amount}</p>
         </div>
         <div>
-          <button className="bg-[color:var(--primary-orange)] text-white px-4 py-2 rounded-md hover:opacity-90 transition">
+          <button 
+            onClick={handleSelect}
+            className="bg-[color:var(--primary-orange)] text-white px-4 py-2 rounded-md hover:opacity-90 transition">
             SELECCIONAR
           </button>
         </div>

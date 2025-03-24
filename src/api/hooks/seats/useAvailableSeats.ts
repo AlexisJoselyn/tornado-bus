@@ -1,4 +1,3 @@
-// src/hooks/useAvailableSeats.ts
 import { useEffect, useState } from 'react';
 import { SeatResponse } from '../../types';
 import { getAvailableSeats } from '../../services';

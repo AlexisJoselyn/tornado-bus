@@ -1,4 +1,3 @@
-// src/types/index.ts
 export interface Seat {
     id: number;
     row: number;

@@ -117,6 +117,7 @@ export const TripForm = ({ onSubmit }: TripFormProps) => {
     setValue('passenger', formatPassengerCounts(newCounts, passengerTypes));
     setTripData({
       totalPassengers: Object.values(newCounts).reduce((acc, count) => acc + count, 0),
+      passengerType: newCounts,
     });
     setDateDisabled(false);
   };
