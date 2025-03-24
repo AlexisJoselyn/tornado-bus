@@ -116,7 +116,7 @@ export const TripForm = ({ onSubmit }: TripFormProps) => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col gap-4 p-4 border rounded-lg bg-white shadow-md"
+      className="flex flex-col gap-4 p-4 border rounded-lg bg-white shadow-md z-10 mb-8"
     >
       <div className="flex gap-4">
         <label className="flex items-center gap-1">

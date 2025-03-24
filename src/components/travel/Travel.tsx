@@ -4,6 +4,7 @@ import { useTripStore } from '../../store';
 import { TripForm } from '../form';
 import { formatDateToYYYYMMDD } from '../../lib';
 import { TravelCard } from '../travelCard';
+import { Banner } from '../banner';
 
 export const Travel = () => {
   const [departureTravels, setDepartureTravels] = useState<DepartureTravel[]>([]);
@@ -55,7 +56,8 @@ export const Travel = () => {
   console.log('departureTravels', departureTravels);
 
   return (
-    <div>
+    <div className='flex flex-col'>
+      <Banner />
       <TripForm onSubmit={handleFormSubmit} />
       {loadingTravels && <p>Cargando...</p>}
       {errorTravels && <p>Error: {errorTravels}</p>}
