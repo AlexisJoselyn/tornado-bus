@@ -23,7 +23,6 @@ const useDepartureTravels = () => {
     },
     []
   );
-
   return { travels, loading, error, search };
 };
 

@@ -20,10 +20,11 @@ export const listDepartureTravels = async (
       }),
     }
   );
-  
   if (!response.ok) {
     throw new Error('Error al listar los viajes de salida');
   }
   
-  return response.json();
+  const responseData = await response.json();
+
+  return responseData;
 };
