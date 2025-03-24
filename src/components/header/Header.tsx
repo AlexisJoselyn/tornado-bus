@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Menu, X, User } from 'lucide-react'; // Asegúrate de importar estos íconos
+import { Menu, X, User } from 'lucide-react';
 
 export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -91,7 +91,7 @@ export const Header = () => {
                   key={item}
                   href={`#${item.toLowerCase().replace(/\s+/g, '-')}`}
                   className="text-blue-900 hover:text-orange-600 transition font-medium"
-                  onClick={closeMenu} // Cierra el menú al hacer clic en un item
+                  onClick={closeMenu}
                 >
                   {item}
                 </a>
