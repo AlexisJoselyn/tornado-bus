@@ -25,14 +25,20 @@ const schema = yup.object().shape({
   returnDate: yup.date()
     .when('tripType', {
       is: 'round-trip',
-      then: schema => schema.min(today, 'La fecha no puede ser pasada').required('La fecha de retorno es obligatoria')
+      then: schema => schema.min(today, 'La fecha no puede ser pasada').required('La fecha de retorno es obligatoria'),
     })
 });
 
 export const TripForm = ({ onSubmit }: TripFormProps) => {
   const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
+    defaultValues: {
+      tripType: 'one-way',
+    },
   });
+
+  const tripType = watch('tripType');
+  const date = watch('date');
 
   const origin = watch('origin');
   const [selectedOriginId, setSelectedOriginId] = useState<number | null>(null);
@@ -227,7 +233,7 @@ export const TripForm = ({ onSubmit }: TripFormProps) => {
       </div>
   
       <div>
-        <label className="block font-semibold text-gray-800">Fecha de Viaje:</label>
+        <label className="block font-semibold text-gray-800">Selecciona tu fecha de salida:</label>
         <input
           type="date"
           {...register('date')}
@@ -236,8 +242,20 @@ export const TripForm = ({ onSubmit }: TripFormProps) => {
           onChange={handleDateChange}
           disabled={dateDisabled}
         />
-        {errors.date && <p className="text-white text-sm">{errors.date.message}</p>}
       </div>
+
+      {tripType === 'round-trip' && (
+        <div>
+          <label className="block font-semibold text-gray-800">Selecciona tu fecha de regreso:</label>
+          <input
+            type="date"
+            {...register('returnDate')}
+            className={`border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-[color:var(--primary-blue)] ${dateDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+            min={date ? new Date(date).toISOString().split('T')[0] : today.toISOString().split('T')[0]}
+            disabled={dateDisabled}
+          />
+        </div>
+      )}
   
       <button
         type="submit"
