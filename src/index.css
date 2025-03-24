@@ -8,4 +8,10 @@
 .rotate-arrow {
     transform: scaleX(-1);
   }
-  
+
+
+@media (width >= 48rem) {
+  .nav-style {
+    display: flex;
+  }
+}

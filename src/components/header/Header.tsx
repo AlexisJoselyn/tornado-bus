@@ -29,7 +29,7 @@ export const Header = () => {
         </a>
       </div>
       
-      <nav className="hidden md:flex gap-6">
+      <nav className="hidden nav-style gap-6">
         {navItems.map((item) => (
           <a
             key={item}
