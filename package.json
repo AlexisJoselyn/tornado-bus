@@ -12,7 +12,6 @@
     "@types/node": "^16.18.126",
     "@types/react": "^19.0.12",
     "@types/react-dom": "^19.0.4",
-    "axios": "^1.8.4",
     "formik": "^2.4.6",
     "lucide-react": "^0.483.0",
     "react": "^19.0.0",
