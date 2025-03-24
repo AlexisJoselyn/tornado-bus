@@ -53,8 +53,6 @@ export const Travel = () => {
     }
   }, [travels]);
 
-  console.log('departureTravels', departureTravels);
-
   return (
     <div className='flex flex-col'>
       <Banner />

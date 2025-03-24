@@ -24,7 +24,7 @@ const PassengerSelector: React.FC<PassengerSelectorProps> = ({ passengerTypes, o
   return (
     <div className="space-y-4">
       {passengerTypes.map((type) => (
-        <div key={type.id} className="flex justify-between items-center p-4 border rounded-lg">
+        <div key={type.id} className="flex justify-between items-center p-4 border rounded-lg text-[color:var(--primary-blue)]">
           <div>
             <h3 className="font-semibold">{type.name}</h3>
             <p className="text-sm text-gray-500">
