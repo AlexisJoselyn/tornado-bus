@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+:root {
+  --primary-orange: rgb(255, 93, 0);
+  --primary-blue: rgb(0, 67, 193);
+}
+
 .rotate-arrow {
     transform: scaleX(-1);
   }

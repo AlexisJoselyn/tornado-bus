@@ -42,10 +42,12 @@ export const TripForm = ({ onSubmit }: TripFormProps) => {
   const destination = watch('destination');
   const { destinations, loadingDestination, errorDestination, searchDestination } = useSearchDestinations();
   const [showDestinationDropdown, setShowDestinationDropdown] = useState(false);
+  const [destinationDisabled, setDestinationDisabled] = useState(true);
 
   const { passengerTypes, loading: loadingPassengerTypes, error: errorPassengerTypes } = usePassengerTypes();
   const [passengerCounts, setPassengerCounts] = useState<{ [key: number]: number }>({});
   const [showPassengerDropdown, setShowPassengerDropdown] = useState(false);
+  const [passengerDisabled, setPassengerDisabled] = useState(true);
 
   const formatPassengerCounts = (counts: { [key: number]: number }, types: typeof passengerTypes): string => {
     return types
@@ -58,6 +60,9 @@ export const TripForm = ({ onSubmit }: TripFormProps) => {
   };
 
   const passengerSummary = formatPassengerCounts(passengerCounts, passengerTypes);
+
+  const [dateDisabled, setDateDisabled] = useState(true);
+
 
   const setTripData = useTripStore((state) => state.setTripData);
 
@@ -87,6 +92,7 @@ export const TripForm = ({ onSubmit }: TripFormProps) => {
       origin: cityName,
       originId: cityId,
     });
+    setDestinationDisabled(false);
   };
 
   const handleDestinationSelection = (destinationName: string, destinationId: number) => {
@@ -96,7 +102,7 @@ export const TripForm = ({ onSubmit }: TripFormProps) => {
       destination: destinationName,
       destinationId,
     });
-
+    setPassengerDisabled(false);
   };
 
   const handlePassengerChange = (typeId: number, count: number) => {
@@ -106,6 +112,7 @@ export const TripForm = ({ onSubmit }: TripFormProps) => {
     setTripData({
       totalPassengers: Object.values(newCounts).reduce((acc, count) => acc + count, 0),
     });
+    setDateDisabled(false);
   };
 
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -116,34 +123,33 @@ export const TripForm = ({ onSubmit }: TripFormProps) => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col gap-4 p-4 border rounded-lg bg-white shadow-md z-10 mb-8"
+      className="flex flex-col gap-4 p-4 border border-gray-300 rounded-lg bg-white shadow-md z-10 mb-8"
     >
       <div className="flex gap-4">
-        <label className="flex items-center gap-1">
-          <input type="radio" value="one-way" {...register('tripType')} /> Solo ida
+        <label className="flex items-center gap-1 text-gray-700">
+          <input type="radio" value="one-way" {...register('tripType')} className="accent-[color:var(--primary-orange)]" /> Solo ida
         </label>
-        <label className="flex items-center gap-1">
-          <input type="radio" value="round-trip" {...register('tripType')} /> Ida y vuelta
+        <label className="flex items-center gap-1 text-gray-700">
+          <input type="radio" value="round-trip" {...register('tripType')} className="accent-[color:var(--primary-orange)]" /> Ida y vuelta
         </label>
       </div>
-
+  
       <div className="relative">
-        <label className="block font-semibold">Origen:</label>
+        <label className="block font-semibold text-gray-800">Origen:</label>
         <input
           {...register('origin')}
-          className="border p-2 w-full rounded-md"
-          placeholder="Busca una ciudad"
+          className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-[color:var(--primary-blue)]"
+          placeholder="¿De dónde partes?"
         />
-        {errors.origin && <p className="text-red-500 text-sm">{errors.origin.message}</p>}
-
-        {/* Lista desplegable de ciudades */}
+        {errors.origin && <p className="text-[color:var(--primary-orange)] text-sm">{errors.origin.message}</p>}
+  
         {showOriginDropdown && (
           <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1">
             {cities.length > 0 ? (
               cities.map((city) => (
                 <div
                   key={city.id}
-                  className="p-2 hover:bg-gray-100 cursor-pointer"
+                  className="p-2 text-[color:var(--primary-blue)] cursor-pointer hover:bg-gray-100 hover:border-l-4 hover:border-[color:var(--primary-orange)] transition"
                   onClick={() => handleCitySelection(city.name, city.id)}
                 >
                   {city.name}
@@ -154,28 +160,28 @@ export const TripForm = ({ onSubmit }: TripFormProps) => {
             )}
           </div>
         )}
-
+  
         {loading && <p className="text-sm text-gray-500">Buscando ciudades...</p>}
-        {error && <p className="text-sm text-red-500">{error}</p>}
+        {error && <p className="text-sm text-[color:var(--primary-orange)]">{error}</p>}
       </div>
-
+  
       <div className="relative">
-        <label className="block font-semibold">Destino:</label>
+        <label className="block font-semibold text-gray-800">Destino:</label>
         <input
           {...register('destination')}
-          className="border p-2 w-full rounded-md"
-          placeholder="Busca una ciudad de destino"
+          className={`border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-[color:var(--primary-blue)] ${destinationDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+          placeholder="¿A dónde vas?"
+          disabled={destinationDisabled}
         />
-        {errors.destination && <p className="text-red-500 text-sm">{errors.destination.message}</p>}
-
-        {/* Lista desplegable de destinos */}
+        {errors.destination && <p className="text-[color:var(--primary-orange)] text-sm">{errors.destination.message}</p>}
+  
         {showDestinationDropdown && (
           <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1">
             {destinations.length > 0 ? (
               destinations.map((destination) => (
                 <div
                   key={destination.id}
-                  className="p-2 hover:bg-gray-100 cursor-pointer"
+                  className="p-2 text-[color:var(--primary-blue)] cursor-pointer hover:bg-gray-100 hover:border-l-4 hover:border-[color:var(--primary-orange)] transition"
                   onClick={() => handleDestinationSelection(destination.name, destination.id)}
                 >
                   {destination.name}
@@ -186,30 +192,30 @@ export const TripForm = ({ onSubmit }: TripFormProps) => {
             )}
           </div>
         )}
-
+  
         {loadingDestination && <p className="text-sm text-gray-500">Buscando destinos...</p>}
-        {errorDestination && <p className="text-sm text-red-500">{errorDestination}</p>}
+        {errorDestination && <p className="text-sm text-[color:var(--primary-orange)]">{errorDestination}</p>}
       </div>
-
+  
       <div className="relative">
-        <label className="block font-semibold">Pasajeros:</label>
+        <label className="block font-semibold text-gray-800">Pasajeros:</label>
         <input
           {...register('passenger')}
-          className="border p-2 w-full rounded-md"
-          placeholder="1 Adulto(s)"
+          className={`border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-[color:var(--primary-blue)] ${passengerDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+          placeholder="¿Cuántos viajan?"
           value={passengerSummary}
           readOnly
           onClick={() => setShowPassengerDropdown(!showPassengerDropdown)}
+          disabled={passengerDisabled}
         />
-        {errors.passenger && <p className="text-red-500 text-sm">{errors.passenger.message}</p>}
-
-        {/* Lista desplegable de tipos de pasajero */}
+        {errors.passenger && <p className="text-[color:var(--primary-orange)] text-sm">{errors.passenger.message}</p>}
+  
         {showPassengerDropdown && (
           <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1">
             {loadingPassengerTypes ? (
               <p className="text-sm text-gray-500">Cargando tipos de pasajero...</p>
             ) : errorPassengerTypes ? (
-              <p className="text-sm text-red-500">{errorPassengerTypes}</p>
+              <p className="text-sm text-[color:var(--primary-orange)]">{errorPassengerTypes}</p>
             ) : (
               <PassengerSelector
                 passengerTypes={passengerTypes}
@@ -219,25 +225,26 @@ export const TripForm = ({ onSubmit }: TripFormProps) => {
           </div>
         )}
       </div>
-
+  
       <div>
-        <label className="block font-semibold">Fecha de Viaje:</label>
+        <label className="block font-semibold text-gray-800">Fecha de Viaje:</label>
         <input
           type="date"
           {...register('date')}
-          className="border p-2 w-full rounded-md"
+          className={`border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-[color:var(--primary-blue)] ${dateDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
           min={today.toISOString().split('T')[0]}
           onChange={handleDateChange}
+          disabled={dateDisabled}
         />
-        {errors.date && <p className="text-red-500 text-sm">{errors.date.message}</p>}
+        {errors.date && <p className="text-white text-sm">{errors.date.message}</p>}
       </div>
-
+  
       <button
         type="submit"
-        className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-700 transition"
+        className="bg-[color:var(--primary-blue)] text-white p-2 rounded-md hover:bg-opacity-80 transition font-semibold"
       >
         Buscar
       </button>
     </form>
-  );
+  );  
 };
