@@ -1,17 +1,13 @@
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useTripStore } from '../../store';
 import { useEffect, useState } from 'react';
 import { usePassengerTypes, useSearchCities, useSearchDestinations } from '../../api';
 import { PassengerSelector } from '../passenger';
+import { useTripStore } from '../../store';
 
-interface TripSearchData {
-  origin: string;
-  destination: string;
-  passenger: string;
-  date: string | Date;
-  returnDate?: string | Date;
+interface TripFormProps {
+  onSubmit: () => void;
 }
 
 const today = new Date();
@@ -33,12 +29,10 @@ const schema = yup.object().shape({
     })
 });
 
-export const TripForm = () => {
+export const TripForm = ({ onSubmit }: TripFormProps) => {
   const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
   });
-
-  const setTripSearch = useTripStore((state) => state.setTripData);
 
   const origin = watch('origin');
   const [selectedOriginId, setSelectedOriginId] = useState<number | null>(null);
@@ -65,6 +59,8 @@ export const TripForm = () => {
 
   const passengerSummary = formatPassengerCounts(passengerCounts, passengerTypes);
 
+  const setTripData = useTripStore((state) => state.setTripData);
+
   useEffect(() => {
     if (origin && origin.length >= 3) {
       search(origin);
@@ -83,38 +79,51 @@ export const TripForm = () => {
     }
   }, [destination, searchDestination, selectedOriginId]);
 
-  const onSubmit = (data: TripSearchData) => {
-    setTripSearch({ ...data, passenger: passengerSummary });
-  };
-
   const handleCitySelection = (cityName: string, cityId: number) => {
     setShowOriginDropdown(false);
     setValue('origin', cityName);
     setSelectedOriginId(cityId);
+    setTripData({
+      origin: cityName,
+      originId: cityId,
+    });
   };
 
-  const handleDestinationSelection = (destinationName: string) => {
+  const handleDestinationSelection = (destinationName: string, destinationId: number) => {
     setShowDestinationDropdown(false);
     setValue('destination', destinationName);
+    setTripData({
+      destination: destinationName,
+      destinationId,
+    });
+
   };
 
   const handlePassengerChange = (typeId: number, count: number) => {
     const newCounts = { ...passengerCounts, [typeId]: count };
     setPassengerCounts(newCounts);
     setValue('passenger', formatPassengerCounts(newCounts, passengerTypes));
+    setTripData({
+      totalPassengers: Object.values(newCounts).reduce((acc, count) => acc + count, 0),
+    });
+  };
+
+  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedDate = new Date(event.target.value);
+    setTripData({ date: selectedDate });
   };
 
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col gap-4 p-4 border rounded-lg bg-white shadow-md"
+      className="flex flex-col gap-4 p-4 border rounded-lg bg-white shadow-md z-10 mb-8"
     >
       <div className="flex gap-4">
         <label className="flex items-center gap-1">
-          <input type="radio" value="one-way" {...register('tripType')} /> One way only
+          <input type="radio" value="one-way" {...register('tripType')} /> Solo ida
         </label>
         <label className="flex items-center gap-1">
-          <input type="radio" value="round-trip" {...register('tripType')} /> Round trip
+          <input type="radio" value="round-trip" {...register('tripType')} /> Ida y vuelta
         </label>
       </div>
 
@@ -167,7 +176,7 @@ export const TripForm = () => {
                 <div
                   key={destination.id}
                   className="p-2 hover:bg-gray-100 cursor-pointer"
-                  onClick={() => handleDestinationSelection(destination.name)}
+                  onClick={() => handleDestinationSelection(destination.name, destination.id)}
                 >
                   {destination.name}
                 </div>
@@ -209,6 +218,18 @@ export const TripForm = () => {
             )}
           </div>
         )}
+      </div>
+
+      <div>
+        <label className="block font-semibold">Fecha de Viaje:</label>
+        <input
+          type="date"
+          {...register('date')}
+          className="border p-2 w-full rounded-md"
+          min={today.toISOString().split('T')[0]}
+          onChange={handleDateChange}
+        />
+        {errors.date && <p className="text-red-500 text-sm">{errors.date.message}</p>}
       </div>
 
       <button

@@ -21,6 +21,7 @@ export const getPassengerTypes = async (): Promise<PassengerType[]> => {
     const data = await response.json();
     return data.data;
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Error fetching passenger types:', error);
     
     return [

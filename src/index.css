@@ -1,1 +1,6 @@
 @import "tailwindcss";
+
+.rotate-arrow {
+    transform: scaleX(-1);
+  }
+  
