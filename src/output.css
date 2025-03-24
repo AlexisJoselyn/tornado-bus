@@ -215,6 +215,9 @@
   .right-0 {
     right: calc(var(--spacing) * 0);
   }
+  .isolate {
+    isolation: isolate;
+  }
   .z-10 {
     z-index: 10;
   }
@@ -301,6 +304,9 @@
   }
   .hidden {
     display: none;
+  }
+  .inline {
+    display: inline;
   }
   .table {
     display: table;
@@ -934,11 +940,6 @@
   .lg\:max-w-4xl {
     @media (width >= 64rem) {
       max-width: var(--container-4xl);
-    }
-  }
-  .xl\:h-\[500px\] {
-    @media (width >= 80rem) {
-      height: 500px;
     }
   }
 }
