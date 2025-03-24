@@ -68,7 +68,7 @@ export const Header = () => {
         <User className="w-6 h-6 cursor-pointer text-blue-900 hover:text-orange-600 transition" />
         
         <Menu
-          className="w-6 h-6 cursor-pointer text-blue-900 hover:text-orange-600 transition md:hidden"
+          className="w-6 h-6 cursor-pointer text-blue-900 hover:text-orange-600 transition md:hidden hidden-menu"
           onClick={toggleMenu}
         />
       </div>

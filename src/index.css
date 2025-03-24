@@ -13,5 +13,9 @@
 @media (width >= 48rem) {
   .nav-style {
     display: flex;
+    height: 48px;
+  }
+  .hidden-menu {
+    display: none;
   }
 }
